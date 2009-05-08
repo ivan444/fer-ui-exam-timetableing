@@ -9,8 +9,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Ivan Krišto
  */
 public class ParallelExamsBean {
-	private int examIDa;
-	private int examIDb;
+	private int[] examIDs;
 	
 	public ParallelExamsBean() {
 	}
@@ -18,31 +17,30 @@ public class ParallelExamsBean {
 	public ParallelExamsBean(String in) {
 		String[] parts = StringUtils.split(in, '#');
 		
-		if (parts[0] == null) throw new IllegalArgumentException("Nije definiran ID ispita!");
-		if (!StringUtils.isNumeric(parts[0])) throw new IllegalArgumentException("Nije definiran ID ispita!");
-		int examIDa = Integer.parseInt(parts[0]);
-		setExamIDa(examIDa);
+		examIDs = new int[parts.length];
 		
-		if (parts[1] == null) throw new IllegalArgumentException("Nije definiran ID ispita!");
-		if (!StringUtils.isNumeric(parts[1])) throw new IllegalArgumentException("Nije definiran ID ispita!");
-		int examIDb = Integer.parseInt(parts[1]);
-		setExamIDb(examIDb);
+		for (int i = 0; i < examIDs.length; i++) {
+			if (parts[i] == null) throw new IllegalArgumentException("Nije definiran ID ispita!");
+			if (!StringUtils.isNumeric(parts[i])) throw new IllegalArgumentException("Nije definiran ID ispita!");
+			int examID = Integer.parseInt(parts[i]);
+			setExamIDs(i, examID);
+		}
 	}
 	
-	public int getExamIDa() {
-		return examIDa;
+	public int[] getExamIDs() {
+		return examIDs;
 	}
 
-	public void setExamIDa(int examIDa) {
-		this.examIDa = examIDa;
+	public void setExamIDs(int[] examIDs) {
+		this.examIDs = examIDs;
 	}
 
-	public int getExamIDb() {
-		return examIDb;
+	public int getExamIDs(int index) {
+		return examIDs[index];
 	}
 
-	public void setExamIDb(int examIDb) {
-		this.examIDb = examIDb;
+	public void setExamIDs(int index, int examID) {
+		this.examIDs[index] = examID;
 	}
 	
 }

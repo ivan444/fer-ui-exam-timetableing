@@ -33,7 +33,7 @@ public class ExamDataTest {
 		for (int i = 0; i < ed.getTerms().length; i++) {
 			sbLoaded.append(ed.getTerms()[i].getDate()).append('#');
 			sbLoaded.append(ed.getTerms()[i].getCapacity()).append('#');
-			sbLoaded.append(ed.getTerms()[i].getNum()).append('#');
+			sbLoaded.append(ed.getTerms()[i].getDayIndex()).append('#');
 			sbLoaded.append(ed.getTerms()[i].getTermID());
 			sbLoaded.append('\n');
 		}
@@ -45,8 +45,13 @@ public class ExamDataTest {
 		}
 		sbLoaded.append(ed.getParallelExams().length).append('\n');
 		for (int i = 0; i < ed.getParallelExams().length; i++) {
-			sbLoaded.append(format00000(ed.getParallelExams()[i].getExamIDa())).append('#');
-			sbLoaded.append(format00000(ed.getParallelExams()[i].getExamIDb()));
+			int[] examIDs = ed.getParallelExams()[i].getExamIDs();
+			for (int j = 0; j < examIDs.length; j++) {
+				sbLoaded.append(format00000(examIDs[j]));
+				if (j != examIDs.length-1) {
+					sbLoaded.append('#');
+				}
+			}
 			sbLoaded.append('\n');
 		}
 		sbLoaded.append(ed.getAllowedTerms().length).append('\n');
