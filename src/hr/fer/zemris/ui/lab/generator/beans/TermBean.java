@@ -4,8 +4,12 @@ import org.apache.commons.lang.StringUtils;
 
 public class TermBean {
 	private String date;
+	
 	private int capacity;
-	private int num;	// TODO: Pogledaj što ovo predstavlja!
+	
+	/** Index dana u intervalu (da bi se izbjegla aritmetika datuma). */
+	private int dayIndex;
+	
 	private String termID;
 	
 	public TermBean() {
@@ -24,7 +28,7 @@ public class TermBean {
 		if (parts[2] == null) throw new IllegalArgumentException("Nije definiran neki broj za koji ne znam što je!");
 		if (!StringUtils.isNumeric(parts[2])) throw new IllegalArgumentException("Nije definiran neki broj za koji ne znam što je");
 		int num = Integer.parseInt(parts[2]);
-		setNum(num);
+		setDayIndex(num);
 		
 		setTermID(parts[3].trim());
 	}
@@ -45,12 +49,12 @@ public class TermBean {
 		this.capacity = capacity;
 	}
 
-	public int getNum() {
-		return num;
+	public int getDayIndex() {
+		return dayIndex;
 	}
 
-	public void setNum(int num) {
-		this.num = num;
+	public void setDayIndex(int dayIndex) {
+		this.dayIndex = dayIndex;
 	}
 
 	public String getTermID() {
