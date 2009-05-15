@@ -9,5 +9,9 @@ public class Startup {
 		// TODO Auto-generated method stub
 
 	}
+	
+	public static void stop() {
+		
+	}
 
 }
