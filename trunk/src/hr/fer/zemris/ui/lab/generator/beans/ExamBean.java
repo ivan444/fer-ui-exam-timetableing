@@ -12,6 +12,7 @@ public class ExamBean {
 	private int examID;
 	private String className;
 	private String[] students;
+	private int[] studentsHash;
 	
 	public ExamBean() {
 	}
@@ -30,8 +31,28 @@ public class ExamBean {
 		// Uklanjanje oznake kraja reda ili krajnjih razmaka ako postoje.
 		students[students.length-1] = students[students.length-1].trim();
 		setStudents(students);
+		
+		calcStudentsHash();
 	}
 	
+	/**
+	 * Računa hash niza JMBAG-ova studenata
+	 * i pohranjuje ih u novi niz.
+	 */
+	private void calcStudentsHash() {
+		studentsHash = new int[students.length];
+		for (int i = 0; i < students.length; i++) {
+			String num = "0x" + students[i].substring(2, 9);
+			String xorS = "0x" + students[i].substring(0, 2);
+			int hash = Integer.decode(num).intValue();
+			int xor = Integer.decode(xorS).intValue() << 20;
+			
+			hash ^= xor;
+			
+			studentsHash[i] = hash;
+		}
+	}
+
 	public int getExamID() {
 		return examID;
 	}
@@ -63,5 +84,9 @@ public class ExamBean {
 		
 		students[index] = student;
 		return true;
+	}
+
+	public int[] getStudentsHash() {
+		return studentsHash;
 	}
 }

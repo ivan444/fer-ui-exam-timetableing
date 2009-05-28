@@ -70,91 +70,92 @@ public class ExamsData {
 		reader.close();
 		
 	}
-
-	public boolean addExam(int index, ExamBean exam) {
-		if (exams == null) return false;
-		if (index >= exams.length) return false;
-		if (index < 0) return false;
-		
-		exams[index] = exam;
-		return true;
-	}
 	
-	public boolean addTerm(int index, TermBean term) {
-		if (terms == null) return false;
-		if (index >= terms.length) return false;
-		if (index < 0) return false;
-		
-		terms[index] = term;
-		return true;
-	}
-	
-	public boolean addFixedTerm(int index, FixedTermBean fTerm) {
-		if (fixedTerms == null) return false;
-		if (index >= fixedTerms.length) return false;
-		if (index < 0) return false;
-		
-		fixedTerms[index] = fTerm;
-		return true;
-	}
-	
-	public boolean addParallelExams(int index, ParallelExamsBean pExams) {
-		if (parallelExams == null) return false;
-		if (index >= parallelExams.length) return false;
-		if (index < 0) return false;
-		
-		parallelExams[index] = pExams;
-		return true;
-	}
-	
-	public boolean addAllowedTerms(int index, AllowedTermsBean aTerms) {
-		if (allowedTerms == null) return false;
-		if (index >= allowedTerms.length) return false;
-		if (index < 0) return false;
-		
-		allowedTerms[index] = aTerms;
-		return true;
-	}
+	// TODO: Mislim da zakomentirane metode ipak ne trebaju.
+//	public boolean addExam(int index, ExamBean exam) {
+//		if (exams == null) return false;
+//		if (index >= exams.length) return false;
+//		if (index < 0) return false;
+//		
+//		exams[index] = exam;
+//		return true;
+//	}
+//	
+//	public boolean addTerm(int index, TermBean term) {
+//		if (terms == null) return false;
+//		if (index >= terms.length) return false;
+//		if (index < 0) return false;
+//		
+//		terms[index] = term;
+//		return true;
+//	}
+//	
+//	public boolean addFixedTerm(int index, FixedTermBean fTerm) {
+//		if (fixedTerms == null) return false;
+//		if (index >= fixedTerms.length) return false;
+//		if (index < 0) return false;
+//		
+//		fixedTerms[index] = fTerm;
+//		return true;
+//	}
+//	
+//	public boolean addParallelExams(int index, ParallelExamsBean pExams) {
+//		if (parallelExams == null) return false;
+//		if (index >= parallelExams.length) return false;
+//		if (index < 0) return false;
+//		
+//		parallelExams[index] = pExams;
+//		return true;
+//	}
+//	
+//	public boolean addAllowedTerms(int index, AllowedTermsBean aTerms) {
+//		if (allowedTerms == null) return false;
+//		if (index >= allowedTerms.length) return false;
+//		if (index < 0) return false;
+//		
+//		allowedTerms[index] = aTerms;
+//		return true;
+//	}
 	
 	public ExamBean[] getExams() {
 		return exams;
 	}
 
-	public void setExams(ExamBean[] exams) {
-		this.exams = exams;
-	}
+//	public void setExams(ExamBean[] exams) {
+//		this.exams = exams;
+//	}
 
 	public TermBean[] getTerms() {
 		return terms;
 	}
 
-	public void setTerms(TermBean[] terms) {
-		this.terms = terms;
-	}
+//	public void setTerms(TermBean[] terms) {
+//		this.terms = terms;
+//	}
 
 	public FixedTermBean[] getFixedTerms() {
 		return fixedTerms;
 	}
 
-	public void setFixedTerms(FixedTermBean[] fixedTerms) {
-		this.fixedTerms = fixedTerms;
-	}
+//	public void setFixedTerms(FixedTermBean[] fixedTerms) {
+//		this.fixedTerms = fixedTerms;
+//	}
 
 	public ParallelExamsBean[] getParallelExams() {
 		return parallelExams;
 	}
 
-	public void setParallelExams(ParallelExamsBean[] parallelExams) {
-		this.parallelExams = parallelExams;
-	}
+//	public void setParallelExams(ParallelExamsBean[] parallelExams) {
+//		this.parallelExams = parallelExams;
+//	}
 
 	public AllowedTermsBean[] getAllowedTerms() {
 		return allowedTerms;
 	}
 
-	public void setAllowedTerms(AllowedTermsBean[] allowedTerms) {
-		this.allowedTerms = allowedTerms;
-	}
+//	public void setAllowedTerms(AllowedTermsBean[] allowedTerms) {
+//		this.allowedTerms = allowedTerms;
+//	}
 	
 	private int readNum(BufferedReader reader, int startLine) throws IOException {
 		String line = null;
