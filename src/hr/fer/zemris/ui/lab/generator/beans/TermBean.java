@@ -3,6 +3,7 @@ package hr.fer.zemris.ui.lab.generator.beans;
 import org.apache.commons.lang.StringUtils;
 
 public class TermBean {
+	
 	private String date;
 	
 	private int capacity;

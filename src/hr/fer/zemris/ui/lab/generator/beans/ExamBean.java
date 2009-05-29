@@ -51,6 +51,40 @@ public class ExamBean {
 			
 			studentsHash[i] = hash;
 		}
+		sortStudents();
+	}
+	
+	public boolean containsStudent(int hash) {
+		int len = studentsHash.length;
+		
+		int index = len/2;
+		
+		while (studentsHash[index] != hash && index != 0 && index < len) {
+			if (studentsHash[index] < hash) {
+				index += (len - index)/2;
+			} else if (studentsHash[index] > hash) {
+				index /= 2;
+			}
+		}
+		
+		return studentsHash[index] == hash;
+	}
+	
+	// TODO: Staviti bolji sort!
+	private void sortStudents() {
+		for (int i = 0; i < studentsHash.length; i++) {
+			for (int j = i; j < studentsHash.length-1; j++) {
+				if (studentsHash[j] > studentsHash[j+1]) {
+					int swap = studentsHash[j];
+					studentsHash[j] = studentsHash[j+1];
+					studentsHash[j+1] = swap;
+					
+					String swapS = students[j];
+					students[j] = students[j+1];
+					students[j+1] = swapS;
+				}
+			}
+		}
 	}
 
 	public int getExamID() {
