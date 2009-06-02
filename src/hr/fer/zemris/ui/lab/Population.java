@@ -15,33 +15,36 @@ public class Population {
 		this.exams = data.getExams();
 		
 		individuals = new Individual[populationSize];
-		generatePopulation();
+		generateInitialPopulation();
 	}
 
-	private void generatePopulation() {
+	private void generateInitialPopulation() {
 		for (int i = 0; i < individuals.length; i++) {
-			individuals[i] = createIndividual();
+			individuals[i] = createRandomIndividual();
 		}
 	}
 	
-	private Individual createIndividual() {
-		int gth = exams.length;
+	private Individual createRandomIndividual() {
+		int examsNum = exams.length;
 		int termsNum = data.getTerms().length;
-		Individual novi = new Individual(gth);
+		Individual created = new Individual(exams);
 		
-		for (int i = 0; i < gth; i++){
+		for (int i = 0; i < examsNum; i++){
 			int index = (int) Math.round(Math.random()*(termsNum-1));
-			novi.setTerm(i, data.getTerms()[index]);
+			created.setTerm(i, data.getTerms()[index]);
 		}
-		return novi;
+		return created;
+	}
+	
+	public Individual getIndividaul (int index){
+		return this.individuals[index];
 	}
 
 	public String printIndividual(int index) {
 		StringBuilder sb = new StringBuilder();
 		Individual timetable = individuals[index];
-		int gth = exams.length;
 		
-		for (int i = 0; i < gth; i++) {
+		for (int i = 0; i < exams.length; i++) {
 			TermBean term = timetable.getTerm(i);
 			ExamBean exam = exams[i];
 			sb	.append(term.getDate())
@@ -57,7 +60,10 @@ public class Population {
 		return sb.toString();
 	}
 	
-	private String format00000(int num) {
+	/**
+	 * LOL!
+	 */
+	public static String format00000(int num) {
 		String numS = Integer.toString(num);
 		int nl = numS.length();
 		for (int i = nl; i < 5; i++) {
