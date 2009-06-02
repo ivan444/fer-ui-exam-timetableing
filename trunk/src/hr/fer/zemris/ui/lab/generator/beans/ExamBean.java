@@ -123,4 +123,13 @@ public class ExamBean {
 	public int[] getStudentsHash() {
 		return studentsHash;
 	}
+	
+	@Override
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("Kolegij:\t").append(this.examID).append('\t').append(this.className);
+		
+		return sb.toString();
+	}
 }
