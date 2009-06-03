@@ -44,7 +44,12 @@ public class Individual {
 		examList.add(exam);
 	}
 	
-	public List<ExamBean> getExamsinTerm(TermBean term){
+	/**
+	 * Metoda vraca listu kolegija koji imaju ispit u istom terminu
+	 * @param term Termin ciji se kolegiji dohvacaju
+	 * @return lista ispita u terminu
+	 */
+	public List<ExamBean> getExamsInTerm(TermBean term){
 		return this.examsInTerm.get(term);
 	}
 
