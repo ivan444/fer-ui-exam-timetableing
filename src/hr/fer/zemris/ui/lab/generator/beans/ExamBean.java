@@ -1,5 +1,7 @@
 package hr.fer.zemris.ui.lab.generator.beans;
 
+import hr.fer.zemris.ui.lab.Population;
+
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -128,7 +130,7 @@ public class ExamBean {
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("Kolegij:\t").append(this.examID).append('\t').append(this.className);
+		sb.append(this.className).append(" (").append(Population.format00000(this.examID)).append(")");
 		
 		return sb.toString();
 	}

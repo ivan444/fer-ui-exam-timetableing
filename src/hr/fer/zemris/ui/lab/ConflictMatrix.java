@@ -1,0 +1,90 @@
+package hr.fer.zemris.ui.lab;
+
+import hr.fer.zemris.ui.lab.generator.beans.ExamBean;
+
+/**
+ * Tablica konflikata je kvadratna matrica sa dimenzijama broja predmeta.
+ * Stupci i retci tablice se tumace kao indexi predmeta. Vrijednost matrice u stupcu 
+ * i, retku j oznacava studente koji su dijeljeni izmedju predmeta sa indexom i,j.
+ * Matrica se zove tablica konflikata zato sto vrijednost matrice razlicita od 0 oznacava
+ * da se dva predmeta nemogu odrzavati u istom terminu. Konflikt nastaje kada
+ * student treba u istom terminu biti na razlicitim ispitima( dva mijesta u isto vrijeme).
+ * @author Dino, ibelsa
+ *
+ */
+public class ConflictMatrix {
+
+	/**
+	 * Sadrzava broj dijeljenih studenata izmedju svih parova predmeta.
+	 */
+	private int [][] conflictMatrix;
+	
+	/**
+	 * Stvara novu tablicu konflikata iz zadanog zadatka.
+	 * Potrebni su samo predmeti zadatka.
+	 * @param task zadatak
+	 */
+	public ConflictMatrix(ExamBean[] exams)
+	{
+		conflictMatrix = new int[exams.length][exams.length];
+		
+		for(int i = 0; i < exams.length; i++)
+		{
+			ExamBean ei = exams[i];
+			
+			for(int j = i; j < exams.length; j++)
+			{
+				ExamBean ej = exams[j];
+				
+				int sharedStud = countSharedStud(ei,ej);
+				
+				conflictMatrix[i][j] = conflictMatrix[j][i] = sharedStud;
+			}
+		}
+	}
+	
+	/**
+	 * Broji zajednicke studente izmedju predmeta ci i cj. 
+	 * @param ci
+	 * @param cj
+	 * @return
+	 */
+	public static int countSharedStud(ExamBean ei, ExamBean ej)
+	{
+		int numberOfStudents = ei.getStudents().length;
+		//ako
+		if(ei == ej)
+		{
+			//su isti 
+			return numberOfStudents;
+		}
+		
+		int shared = 0;
+		
+		/*
+		 * Usporedi svaki sa svakim. (moze i brze ako su liste sortirane.)
+		 */
+		
+		
+		for (int i = 0; i < numberOfStudents; i++){
+			
+			String si = ei.getStudents()[i];
+			
+			for (int j = 0; j< numberOfStudents; i++){
+				
+				String sj = ei.getStudents()[j];
+				
+				if(si.equals(sj) == true)
+				{
+					shared++;
+				}
+			}
+		}
+		return shared;
+	}
+	
+	public int shared(int i , int j)
+	{
+		return conflictMatrix[i][j];
+	}
+}
