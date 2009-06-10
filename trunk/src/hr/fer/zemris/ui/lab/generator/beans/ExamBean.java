@@ -16,6 +16,8 @@ public class ExamBean {
 	private String[] students;
 	private int[] studentsHash;
 	
+	private int index;
+	
 	public ExamBean() {
 	}
 	
@@ -57,11 +59,21 @@ public class ExamBean {
 	}
 	
 	public boolean containsStudent(int hash) {
+		
+		//privremeno sam iskljucio binary, nesto nije dobro i vrti se beskonacno 
+		
 		int len = studentsHash.length;
 		
+		for (int i = 0; i < len; i++)
+		{
+			if (this.studentsHash[i] == hash) return true;
+		}
+		return false;
+		/*
 		int index = len/2;
 		
 		while (studentsHash[index] != hash && index != 0 && index < len) {
+			
 			if (studentsHash[index] < hash) {
 				index += (len - index)/2;
 			} else if (studentsHash[index] > hash) {
@@ -70,9 +82,10 @@ public class ExamBean {
 		}
 		
 		return studentsHash[index] == hash;
+		*/
 	}
 	
-	// TODO: Staviti bolji sort!
+	// TODO: Staviti bolji sort! l33t haxorz super sort
 	private void sortStudents() {
 		for (int i = 0; i < studentsHash.length; i++) {
 			for (int j = i; j < studentsHash.length-1; j++) {
@@ -133,5 +146,13 @@ public class ExamBean {
 		sb.append(this.className).append(" (").append(Population.format00000(this.examID)).append(")");
 		
 		return sb.toString();
+	}
+
+	public void setIndex(int i) {
+		this.index = i;
+		
+	}
+	public int index(){
+		return this.index;
 	}
 }

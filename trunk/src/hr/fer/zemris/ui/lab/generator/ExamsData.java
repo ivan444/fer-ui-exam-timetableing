@@ -181,18 +181,6 @@ public class ExamsData {
 		
 		String line = null;
 		
-//		// Učitaj broj ispita
-//		line = reader.readLine();
-//		if (line == null) {
-//			throw new IllegalArgumentException("Linija " + startLine + ": Neispravan format ulazne datoteke! " +
-//					"Nije zadan broj unosa!");
-//		}
-//		if (!StringUtils.isNumeric(line)) {
-//			throw new IllegalArgumentException("Linija " + startLine + ": Neispravan format ulazne datoteke! " +
-//					"Nije zadan broj unosa (neispravan format unosa)!");
-//		}
-//		int num = Integer.parseInt(line);
-		
 		// Rezerviraj memoriju za ispite
 		Class<T> Tclass = (Class<T>) Class.forName(className);
 		Constructor<T> strTConstruct = null;

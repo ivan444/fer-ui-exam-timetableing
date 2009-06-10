@@ -8,7 +8,7 @@ import hr.fer.zemris.ui.lab.generator.beans.ExamBean;
  * i, retku j oznacava studente koji su dijeljeni izmedju predmeta sa indexom i,j.
  * Matrica se zove tablica konflikata zato sto vrijednost matrice razlicita od 0 oznacava
  * da se dva predmeta nemogu odrzavati u istom terminu. Konflikt nastaje kada
- * student treba u istom terminu biti na razlicitim ispitima( dva mijesta u isto vrijeme).
+ * student treba u istom terminu biti na razlicitim ispitima( dva mjesta u isto vrijeme).
  * @author Dino, ibelsa
  *
  */
@@ -31,53 +31,39 @@ public class ConflictMatrix {
 		for(int i = 0; i < exams.length; i++)
 		{
 			ExamBean ei = exams[i];
+			ei.setIndex(i);
 			
 			for(int j = i; j < exams.length; j++)
 			{
 				ExamBean ej = exams[j];
-				
 				int sharedStud = countSharedStud(ei,ej);
-				
 				conflictMatrix[i][j] = conflictMatrix[j][i] = sharedStud;
 			}
 		}
 	}
 	
 	/**
-	 * Broji zajednicke studente izmedju predmeta ci i cj. 
-	 * @param ci
-	 * @param cj
+	 * Broji zajednicke studente izmedju predmeta exam1 i exam2. 
+	 * @param exam1
+	 * @param exam2
 	 * @return
 	 */
-	public static int countSharedStud(ExamBean ei, ExamBean ej)
+	public static int countSharedStud(ExamBean exam1, ExamBean exam2)
 	{
-		int numberOfStudents = ei.getStudents().length;
-		//ako
-		if(ei == ej)
+		int numberOfStudents = exam1.getStudents().length;
+		
+		if(exam1 == exam2)
 		{
-			//su isti 
 			return numberOfStudents;
 		}
 		
 		int shared = 0;
 		
-		/*
-		 * Usporedi svaki sa svakim. (moze i brze ako su liste sortirane.)
-		 */
-		
-		
 		for (int i = 0; i < numberOfStudents; i++){
 			
-			String si = ei.getStudents()[i];
-			
-			for (int j = 0; j< numberOfStudents; i++){
-				
-				String sj = ei.getStudents()[j];
-				
-				if(si.equals(sj) == true)
-				{
-					shared++;
-				}
+			int student = exam1.getStudentsHash()[i];
+			if (exam2.containsStudent(student)) {
+				shared++;
 			}
 		}
 		return shared;

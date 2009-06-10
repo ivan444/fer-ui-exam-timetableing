@@ -1,7 +1,7 @@
 package hr.fer.zemris.ui.lab;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +36,7 @@ public class Individual {
 		// i ovaj new bi trebalo izbaciti van. mogli bi prije algoritma
 		// instancirati sve lista svih termina pa onda ova provjera nije ni potreba!
 		if (examList == null){
-			examList = new LinkedList<ExamBean>();
+			examList = new ArrayList<ExamBean>();
 			this.examsInTerm.put(term,examList);
 			
 		}

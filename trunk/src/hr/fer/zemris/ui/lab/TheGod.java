@@ -13,6 +13,7 @@ import hr.fer.zemris.ui.lab.generator.beans.TermBean;
 public class TheGod {
 	
 	private ExamsData inputData;
+	private ConflictMatrix conflictMatrix;
 	
 	// ovdje bismo mogli definirati parametre genetskog algoritma
 	// evo samo neki za primjer:
@@ -23,6 +24,7 @@ public class TheGod {
 	
 	public TheGod(ExamsData eddie){
 		this.inputData = eddie;
+		conflictMatrix = new ConflictMatrix(eddie.getExams());
 	}
 	
 	/**
@@ -33,37 +35,65 @@ public class TheGod {
 		Population childrenOfGod = new Population(this.inputData, initialPopulationSize);
 		
 		//while(1)
-		//	crossover
-		//	mutate
-		//	select
+		//	select k1,k2
+		//	k3 = crossover k1,k2
+		//	mutate k3
+		//	
 		//	...
+		
+		//u nastavku primjer jednog krizanja, nastaje kain, koji onda biva evaluiran
 		
 		Individual kain = makeBabies(childrenOfGod.getIndividaul(0),childrenOfGod.getIndividaul(1));
 		kain.mutate();
-		
 		System.out.println(printIndividual(kain));
 		
-		evaluateFitness(kain);
+		float fitness1 = evaluateFitness(kain);
+		float fitness2 = evaluateFitness(childrenOfGod.getIndividaul(0));
+		float fitness3 = evaluateFitness(childrenOfGod.getIndividaul(1));
+		
+		System.out.println("Dobrota tate:\t\t" + fitness2);
+		System.out.println("Dobrota mame:\t\t" + fitness3);
+		System.out.println("------------------------------");
+		System.out.println("Dobrota djeteta:\t" + fitness1);
 	}
 	
 	private float evaluateFitness(Individual timetable) {
-		
-		/* Ovo je ukradeno iz evaluatora, primjer kako bi trebala i nasa izgledati:
+		// Ovo je ukradeno iz evaluatora, no license agreement :-P
 		if(isEveryCourseInAcceptableTerm(timetable) == false
 				|| isCourseClustersTogether(timetable) == false
 				|| isEveryFixedCourseInFixedTerm(timetable) == false)
 				{
 					return Float.MAX_VALUE; 
 				}
-				
-				return 10000*countConflictedStudents(solution)
-				+ 10000*countCapacityOverflow(solution)
-				+ 4*countStudentsWithExamsInDayDiference(solution, 0) //ispiti u istom danu
-				+ countStudentsWithExamsInDayDiference(solution, 1); // ispiti u sljedecem danu
-		
-		*/
-		
-		return 10000*countConflictedStudents(timetable);
+		return 10000*countConflictedStudents(timetable)
+			+ 10000*countCapacityOverflow(timetable)
+			+ 4*countStudentsWithExamsInDayDiference(timetable, 0) //ispiti u istom danu
+			+ countStudentsWithExamsInDayDiference(timetable, 1); // ispiti u sljedecem danu
+	}
+
+	private boolean isEveryFixedCourseInFixedTerm(Individual timetable) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	private boolean isCourseClustersTogether(Individual timetable) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	private boolean isEveryCourseInAcceptableTerm(Individual timetable) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	private int countStudentsWithExamsInDayDiference(Individual timetable, int delta) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	private int countCapacityOverflow(Individual timetable) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 	/**
@@ -72,31 +102,33 @@ public class TheGod {
 	 * @return broj studenata koji imaju dva ispita u istom terminu
 	 */
 	private int countConflictedStudents(Individual timetable) {
+		
 		TermBean[] terms = inputData.getTerms();
-		for (int i = 0; i < terms.length; i++){
-			TermBean term = terms[i];
+		int conflicted = 0;
+		
+		for(int k = 0; k < terms.length; k++)
+		{
+			TermBean term = terms[k];
+			List <ExamBean> examsInTerm = timetable.getExamsInTerm(term);
 			
-			List <ExamBean> termExams = timetable.getExamsInTerm(term);
-			
-			//sad kad imamo sve ispite u nekom terminu, moramo pomocu ConflictMatrix
-			//dohvatiti koliko se studenata preklapa u svakoj kombinaciji:
-			// this.inputData.getConflictMatrix().countSharedStud(term1, term2);
-			
-			//pokusni ispis da isprobam dohvat kolegija u terminu:
-			System.out.println("***********************************************");
-			System.out.println("U terminu " + term.getDate() + " su ispiti kolegija:\n");
-			
-			if (termExams != null){
-				for (ExamBean exam : termExams){
-					System.out.print("\t- ");
-					System.out.println(exam);
-				}
-			} else {
-				System.out.println("\t- termin prazan");
+			if(examsInTerm == null) // prazan termin
+			{
+				continue;
 			}
-			System.out.println();
+			
+			for (int i = 0; i < examsInTerm.size()-1; i++) {
+				
+				int firstIndex = examsInTerm.get(i).index();
+				
+				for(int j = i+1; j < examsInTerm.size(); j++)
+				{
+					int secondIndex = examsInTerm.get(j).index();
+					conflicted += conflictMatrix.shared(firstIndex,secondIndex);
+				}
+			}
 		}
-		return 0;
+		//System.out.println("counted "  + conflicted + " conflicted students. Ouch!");
+		return conflicted;
 	}
 
 	/**
