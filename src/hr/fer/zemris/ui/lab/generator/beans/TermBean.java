@@ -65,4 +65,35 @@ public class TermBean {
 	public void setTermID(String termID) {
 		this.termID = termID;
 	}
+	
+	public String toString() {
+		return "" + termID + date;
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((termID == null) ? 0 : termID.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TermBean other = (TermBean) obj;
+		if (termID == null) {
+			if (other.termID != null)
+				return false;
+		} else if (!termID.equals(other.termID))
+			return false;
+		return true;
+	}
+	
+	
 }
