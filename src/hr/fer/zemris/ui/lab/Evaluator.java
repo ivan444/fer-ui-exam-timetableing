@@ -20,6 +20,7 @@ public class Evaluator {
 	
 	public float evaluateFitness(Individual timetable) {
 		// Ovo je ukradeno iz evaluatora, no license agreement :-P
+		
 		if(isEveryCourseInAcceptableTerm(timetable) == false
 				|| isCourseClustersTogether(timetable) == false
 				|| isEveryFixedCourseInFixedTerm(timetable) == false)
@@ -84,6 +85,7 @@ public class Evaluator {
 				for(int j = i+1; j < examsInTerm.size(); j++)
 				{
 					int secondIndex = examsInTerm.get(j).index();
+					
 					conflicted += conflictMatrix.shared(firstIndex,secondIndex);
 				}
 			}
