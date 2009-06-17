@@ -20,7 +20,7 @@ public class TheGod {
 	
 	// ovdje bismo mogli definirati parametre genetskog algoritma
 	// evo samo neki za primjer:
-	private int populationSize = 20;		//Adam & Eve
+	private int populationSize = 1000;		//Adam & Eve
 	private float mutationFactor = 0.00f;		//No mutants allowed!
 	private boolean incest = false;				//No Fritzl allowed!
 	private int numberOfParents = 2;			//No orgies allowed!
@@ -44,9 +44,11 @@ public class TheGod {
 		
 		int k = 0;
 		Population theNewGeneration = new Population(populationSize);
+		
 		while (k++ < 1000){
 			
 			evaluatePopulation(childrenOfGod);
+			
 			System.out.println("f = " + childrenOfGod.getPopulationFitness());
 			
 			for (int i = 0; i < populationSize;i++){
@@ -59,9 +61,10 @@ public class TheGod {
 				
 				theNewGeneration.setIndividaul(D1, i);
 			}
+			
 			//evaluatePopulation(childrenOfGod);
 			//System.out.println("f1 = " + theNewGeneration.getPopulationFitness());
-			//childrenOfGod = theNewGeneration;
+			childrenOfGod = theNewGeneration;
 			//System.out.println("f2 = " + childrenOfGod.getPopulationFitness());
 			
 			
@@ -85,12 +88,12 @@ public class TheGod {
 			
 			Individual one = childrenOfGod.getIndividual(i);
 			float onesFitness = evaluator.evaluateFitness(one);
+			
 			one.setFitness(onesFitness);
 			
 			fitnessSum += onesFitness;	
 			
-			if (i == 0 || maxValue < onesFitness)
-            {
+			if (i == 0 || maxValue < onesFitness) {
                 maxValue = onesFitness;
             }
 		}
