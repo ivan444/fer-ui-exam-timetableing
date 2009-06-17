@@ -9,6 +9,7 @@ public class Population {
 	private ExamBean[] exams;
 	private ExamsData data;
 	
+	
 	public Population(ExamsData data, int populationSize) {
 		super();
 		this.data = data;
@@ -16,6 +17,12 @@ public class Population {
 		
 		individuals = new Individual[populationSize];
 		generateInitialPopulation();
+	}
+	
+	public Population(int populationSize) {
+		super();
+		
+		individuals = new Individual[populationSize];
 	}
 
 	private void generateInitialPopulation() {
@@ -36,8 +43,20 @@ public class Population {
 		return created;
 	}
 	
-	public Individual getIndividaul (int index){
+	public Individual getIndividual (int index){
 		return this.individuals[index];
+	}
+	
+	public Individual[] getAllIndividuals (){
+		return individuals;
+	}
+	
+	public void setIndividaul (Individual ind,int index){
+		this.individuals[index] = ind;
+	}
+	
+	public int size(){
+		return this.individuals.length;
 	}
 
 	public String printIndividual(int index) {

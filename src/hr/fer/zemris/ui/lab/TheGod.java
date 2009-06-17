@@ -1,6 +1,8 @@
 package hr.fer.zemris.ui.lab;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import hr.fer.zemris.ui.lab.generator.ExamsData;
 import hr.fer.zemris.ui.lab.generator.beans.ExamBean;
@@ -14,17 +16,23 @@ public class TheGod {
 	
 	private ExamsData inputData;
 	private ConflictMatrix conflictMatrix;
+	private Random randomGenerator;
 	
 	// ovdje bismo mogli definirati parametre genetskog algoritma
 	// evo samo neki za primjer:
-	private int initialPopulationSize = 2;		//Adam & Eve
+	private int populationSize = 20;		//Adam & Eve
 	private float mutationFactor = 0.00f;		//No mutants allowed!
 	private boolean incest = false;				//No Fritzl allowed!
 	private int numberOfParents = 2;			//No orgies allowed!
 	
+	private Evaluator evaluator;
+	
+	
 	public TheGod(ExamsData eddie){
 		this.inputData = eddie;
-		conflictMatrix = new ConflictMatrix(eddie.getExams());
+		this.conflictMatrix = new ConflictMatrix(eddie.getExams());
+		this.randomGenerator = new Random();
+		this.evaluator = new Evaluator(eddie,this.conflictMatrix);
 	}
 	
 	/**
@@ -32,103 +40,29 @@ public class TheGod {
 	 */
 	public void doEvolution(){
 		
-		Population childrenOfGod = new Population(this.inputData, initialPopulationSize);
+		Population childrenOfGod = new Population(this.inputData, populationSize);
 		
-		//while(1)
-		//	select k1,k2
-		//	k3 = crossover k1,k2
-		//	mutate k3
-		//	
-		//	...
-		
-		//u nastavku primjer jednog krizanja, nastaje kain, koji onda biva evaluiran
-		
-		Individual kain = makeBabies(childrenOfGod.getIndividaul(0),childrenOfGod.getIndividaul(1));
-		kain.mutate();
-		System.out.println(printIndividual(kain));
-		
-		float fitness1 = evaluateFitness(kain);
-		float fitness2 = evaluateFitness(childrenOfGod.getIndividaul(0));
-		float fitness3 = evaluateFitness(childrenOfGod.getIndividaul(1));
-		
-		System.out.println("Dobrota tate:\t\t" + fitness2);
-		System.out.println("Dobrota mame:\t\t" + fitness3);
-		System.out.println("------------------------------");
-		System.out.println("Dobrota djeteta:\t" + fitness1);
-	}
-	
-	private float evaluateFitness(Individual timetable) {
-		// Ovo je ukradeno iz evaluatora, no license agreement :-P
-		if(isEveryCourseInAcceptableTerm(timetable) == false
-				|| isCourseClustersTogether(timetable) == false
-				|| isEveryFixedCourseInFixedTerm(timetable) == false)
-				{
-					return Float.MAX_VALUE; 
-				}
-		return 10000*countConflictedStudents(timetable)
-			+ 10000*countCapacityOverflow(timetable)
-			+ 4*countStudentsWithExamsInDayDiference(timetable, 0) //ispiti u istom danu
-			+ countStudentsWithExamsInDayDiference(timetable, 1); // ispiti u sljedecem danu
-	}
-
-	private boolean isEveryFixedCourseInFixedTerm(Individual timetable) {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	private boolean isCourseClustersTogether(Individual timetable) {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	private boolean isEveryCourseInAcceptableTerm(Individual timetable) {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	private int countStudentsWithExamsInDayDiference(Individual timetable, int delta) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	private int countCapacityOverflow(Individual timetable) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	/**
-	 * Metoda izracunava broj studenata kojima se poklapaju ispiti u istom terminu.
-	 * @param timetable Primjer rasporeda koji se evaluira
-	 * @return broj studenata koji imaju dva ispita u istom terminu
-	 */
-	private int countConflictedStudents(Individual timetable) {
-		
-		TermBean[] terms = inputData.getTerms();
-		int conflicted = 0;
-		
-		for(int k = 0; k < terms.length; k++)
-		{
-			TermBean term = terms[k];
-			List <ExamBean> examsInTerm = timetable.getExamsInTerm(term);
-			
-			if(examsInTerm == null) // prazan termin
-			{
-				continue;
-			}
-			
-			for (int i = 0; i < examsInTerm.size()-1; i++) {
+		int k = 0;
+		Population theNewGeneration = new Population(populationSize);
+		while (k++ < 40){
+			for (int i = 0; i < populationSize;i++){
 				
-				int firstIndex = examsInTerm.get(i).index();
+				//odaberi R1
+				//odaberi R2
 				
-				for(int j = i+1; j < examsInTerm.size(); j++)
-				{
-					int secondIndex = examsInTerm.get(j).index();
-					conflicted += conflictMatrix.shared(firstIndex,secondIndex);
-				}
+				Individual R1 = childrenOfGod.getIndividual(0);
+				Individual R2 = childrenOfGod.getIndividual(1);
+				
+				Individual D1 = makeBabies(R1, R2);
+				D1.mutate();
+				
+				theNewGeneration.setIndividaul(D1, i);
 			}
+			childrenOfGod = theNewGeneration;
+			System.out.println("nova generacija...");
 		}
-		//System.out.println("counted "  + conflicted + " conflicted students. Ouch!");
-		return conflicted;
+
+		
 	}
 
 	/**
@@ -145,8 +79,11 @@ public class TheGod {
 		
 		int numberOfGenes = this.inputData.getExams().length;
 		
+		int breakpoint = randomGenerator.nextInt(numberOfGenes);
+		System.out.println("breakpoint: " + breakpoint);
+		
 		for (int i = 0; i < numberOfGenes; i++){
-			if (i < numberOfGenes/2){
+			if (i < breakpoint){
 				baby.setTerm(i, dad.getTerm(i));
 			} else {
 				baby.setTerm(i, mom.getTerm(i));
