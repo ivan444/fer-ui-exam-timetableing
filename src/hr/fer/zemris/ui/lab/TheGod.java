@@ -44,24 +44,98 @@ public class TheGod {
 		
 		int k = 0;
 		Population theNewGeneration = new Population(populationSize);
-		while (k++ < 40){
+		while (k++ < 1000){
+			
+			evaluatePopulation(childrenOfGod);
+			System.out.println("f = " + childrenOfGod.getPopulationFitness());
+			
 			for (int i = 0; i < populationSize;i++){
 				
-				//odaberi R1
-				//odaberi R2
-				
-				Individual R1 = childrenOfGod.getIndividual(0);
-				Individual R2 = childrenOfGod.getIndividual(1);
+				Individual R1 = spinTheWheel(childrenOfGod);
+				Individual R2 = spinTheWheel(childrenOfGod);
 				
 				Individual D1 = makeBabies(R1, R2);
-				D1.mutate();
+				D1.mutate(mutationFactor);
 				
 				theNewGeneration.setIndividaul(D1, i);
 			}
-			childrenOfGod = theNewGeneration;
-			System.out.println("nova generacija...");
+			//evaluatePopulation(childrenOfGod);
+			//System.out.println("f1 = " + theNewGeneration.getPopulationFitness());
+			//childrenOfGod = theNewGeneration;
+			//System.out.println("f2 = " + childrenOfGod.getPopulationFitness());
+			
+			
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
+		
+	}
+
+	private void evaluatePopulation(Population childrenOfGod) {
+		
+		int fitnessSum = 0;
+		double maxValue = 0;
+		
+		for (int i = 0; i < childrenOfGod.size(); i++){
+			
+			Individual one = childrenOfGod.getIndividual(i);
+			float onesFitness = evaluator.evaluateFitness(one);
+			one.setFitness(onesFitness);
+			
+			fitnessSum += onesFitness;	
+			
+			if (i == 0 || maxValue < onesFitness)
+            {
+                maxValue = onesFitness;
+            }
+		}
+		
+		childrenOfGod.setPopulationFitness(fitnessSum, maxValue);
+		
+	}
+
+	private Individual spinTheWheel(Population childrenOfGod) {
+		
+		int size = childrenOfGod.size();
+		
+		float fitnessSum = childrenOfGod.getPopulationFitness();
+		double maxFitness =  childrenOfGod.getMaxPopulationFitness();
+		
+		double[] singleFitness = new double[size]; 
+        double[] lenSingle = new double[size];
+		
+		
+		for (int i = 0; i < size; i++)
+        {
+			singleFitness[i] = maxFitness - childrenOfGod.getIndividual(i).fitness();
+        }
+		
+		for (int i = 0; i < size; i++)
+        {
+            lenSingle[i] = singleFitness[i] / fitnessSum;
+        }
+		
+		
+		double chosen = randomGenerator.nextDouble(); 
+        double accumulateSum = 0;
+
+        for (int i = 0; i < size; i++)
+        {
+            accumulateSum = accumulateSum + lenSingle[i];
+
+            if (chosen < accumulateSum)
+            {
+            	//System.out.println(childrenOfGod.getIndividual(i).fitness());
+                return childrenOfGod.getIndividual(i);
+            }
+        }
+
+        return childrenOfGod.getIndividual(size - 1);
 		
 	}
 
@@ -80,7 +154,6 @@ public class TheGod {
 		int numberOfGenes = this.inputData.getExams().length;
 		
 		int breakpoint = randomGenerator.nextInt(numberOfGenes);
-		System.out.println("breakpoint: " + breakpoint);
 		
 		for (int i = 0; i < numberOfGenes; i++){
 			if (i < breakpoint){

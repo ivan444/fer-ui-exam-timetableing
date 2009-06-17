@@ -14,6 +14,8 @@ public class Individual {
 	
 	private Map<TermBean, List<ExamBean>> examsInTerm;
 	
+	private float fitness;
+	
 	public Individual(ExamBean[] exams) {
 		
 		//TODO: Ovi new-ovi bi mogli biti unutar algoritma!
@@ -57,7 +59,15 @@ public class Individual {
 		
 	}
 	
-	public void mutate() {
+	public void mutate(float mutationFactor) {
 		
+	}
+
+	public void setFitness(float f) {
+		this.fitness = f;
+	}
+	
+	public float fitness(){
+		return this.fitness;
 	}
 }

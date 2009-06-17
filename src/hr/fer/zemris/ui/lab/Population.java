@@ -9,6 +9,9 @@ public class Population {
 	private ExamBean[] exams;
 	private ExamsData data;
 	
+	private float populationFitness;
+	private double maxPopulationFitness;
+	
 	
 	public Population(ExamsData data, int populationSize) {
 		super();
@@ -90,6 +93,19 @@ public class Population {
 		}
 		
 		return numS;
+	}
+
+	public void setPopulationFitness(float populationFitness, double max) {
+		this.populationFitness = populationFitness;
+		this.maxPopulationFitness = max;
+	}
+
+	public float getPopulationFitness() {
+		return populationFitness;
+	}
+	
+	public double getMaxPopulationFitness() {
+		return this.maxPopulationFitness;
 	}
 	
 }
