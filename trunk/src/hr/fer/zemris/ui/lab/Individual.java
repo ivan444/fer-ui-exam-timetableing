@@ -11,15 +11,13 @@ import hr.fer.zemris.ui.lab.generator.beans.TermBean;
 public class Individual {
 	private TermBean[] terms;
 	private ExamBean[] exams;
-	
+
+	// TODO: dodati term day difference matricu
 	private Map<TermBean, List<ExamBean>> examsInTerm;
 	
 	private float fitness;
 	
 	public Individual(ExamBean[] exams) {
-		
-		//TODO: Ovi new-ovi bi mogli biti unutar algoritma!
-		
 		this.terms = new TermBean[exams.length];
 		this.exams = exams;
 		
@@ -30,9 +28,18 @@ public class Individual {
 		return terms[index];
 	}
 	
+	public TermBean[] getSolutionTerms(){
+		return this.terms;
+	}
+	
 	public void setTerm(int index, TermBean term) {
-		this.terms[index] = term;
+		TermBean oldTerm = terms[index];
+		if (oldTerm != null) {
+			removeExamFromTerm(oldTerm, index);
+		}
 		
+		this.terms[index] = term;
+
 		List<ExamBean> examList = this.examsInTerm.get(term);
 		
 		// i ovaj new bi trebalo izbaciti van. mogli bi prije algoritma
@@ -44,6 +51,20 @@ public class Individual {
 		}
 		ExamBean exam = this.exams[index];
 		examList.add(exam);
+	}
+	
+	private void removeExamFromTerm(TermBean term, int examIndex) {
+		List<ExamBean> examList = this.examsInTerm.get(term);
+		int toRemove = -1;
+		for (int i = 0; i < examList.size(); i++) {
+			if (examList.get(i).index() == examIndex) {
+				toRemove = i;
+				break;
+			}
+			
+		}
+		
+		examList.remove(toRemove);
 	}
 	
 	/**
@@ -59,8 +80,16 @@ public class Individual {
 		
 	}
 	
-	public void mutate(float mutationFactor) {
-		
+	public void mutate(float mutationFactor, TermBean[] allTerms) {
+		//int sum = 0;
+		for (int i = 0; i < terms.length; i++) {
+			if (Math.random() < mutationFactor) {
+				int swpIndex = (int) Math.round(Math.random()*(allTerms.length-1));
+				setTerm(i, allTerms[swpIndex]);
+			//	sum++;
+			}
+		}
+		//System.out.println("Mutirao jedinku " + sum + " puta!");
 	}
 
 	public void setFitness(float f) {

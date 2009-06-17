@@ -9,25 +9,21 @@ public class Population {
 	private ExamBean[] exams;
 	private ExamsData data;
 	
-	private float populationFitness;
+	private double populationFitness;
 	private double maxPopulationFitness;
+	private double avgPopulationFitness;
+	private double minPopulationFitness;
 	
 	
 	public Population(ExamsData data, int populationSize) {
 		super();
 		this.data = data;
 		this.exams = data.getExams();
-		
+
 		individuals = new Individual[populationSize];
 		generateInitialPopulation();
 	}
 	
-	public Population(int populationSize) {
-		super();
-		
-		individuals = new Individual[populationSize];
-	}
-
 	private void generateInitialPopulation() {
 		for (int i = 0; i < individuals.length; i++) {
 			individuals[i] = createRandomIndividual();
@@ -95,17 +91,27 @@ public class Population {
 		return numS;
 	}
 
-	public void setPopulationFitness(float populationFitness, double max) {
+	public void setPopulationFitness(double populationFitness, double max, double min, double avg) {
 		this.populationFitness = populationFitness;
 		this.maxPopulationFitness = max;
+		this.minPopulationFitness = min;
+		this.avgPopulationFitness = avg;
 	}
 
-	public float getPopulationFitness() {
+	public double getPopulationFitness() {
 		return populationFitness;
 	}
 	
 	public double getMaxPopulationFitness() {
 		return this.maxPopulationFitness;
+	}
+
+	public double getAvgPopulationFitness() {
+		return avgPopulationFitness;
+	}
+
+	public double getMinPopulationFitness() {
+		return minPopulationFitness;
 	}
 	
 }
