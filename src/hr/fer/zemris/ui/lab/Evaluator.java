@@ -3,7 +3,6 @@ package hr.fer.zemris.ui.lab;
 import hr.fer.zemris.ui.lab.generator.ExamsData;
 import hr.fer.zemris.ui.lab.generator.beans.ExamBean;
 import hr.fer.zemris.ui.lab.generator.beans.FixedTermBean;
-import hr.fer.zemris.ui.lab.generator.beans.ParallelExamsBean;
 import hr.fer.zemris.ui.lab.generator.beans.TermBean;
 
 import java.util.List;

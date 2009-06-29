@@ -6,17 +6,20 @@ import java.io.IOException;
 import java.util.Random;
 
 import hr.fer.zemris.ui.lab.generator.ExamsData;
-import hr.fer.zemris.ui.lab.generator.beans.ExamBean;
-import hr.fer.zemris.ui.lab.generator.beans.TermBean;
+import hr.fer.zemris.ui.lab.generika.MultiPointMutation;
+import hr.fer.zemris.ui.lab.generika.Mutator;
 
 /**
  * Klasa koja sadrzi mehanizme potrebne za simuliranje evolucije genetskim
  * algoritmom. Sadrzi operator krizanja (crossover) i fitness funkciju kojom se
  * evaluira potencijalno rjesenje.
  */
+
+// TODO: Dodati elitizam!!!
 public class TheGod {
 
 	private ExamsData inputData;
+	private Mutator mutator;
 	private ConflictMatrix conflictMatrix;
 	private Random randomGenerator;
 	private double[] singleFitness;
@@ -25,9 +28,10 @@ public class TheGod {
 	// evo samo neki za primjer:
 	private int populationSize = 100; //Adam & Eve
 	final private float mutationFactor = 0.001f; //No mutants allowed!
-	private boolean incest = false; //No Fritzl allowed!
-	private int numberOfParents = 2; //No orgies allowed!
-
+//	private boolean incest = false; //No Fritzl allowed!
+//	private int numberOfParents = 2; //No orgies allowed!
+	private boolean elitizam = true;
+	
 	private Evaluator evaluator;
 
 	public TheGod(ExamsData eddie) {
@@ -37,6 +41,7 @@ public class TheGod {
 		this.evaluator = new Evaluator(eddie, this.conflictMatrix);
 		this.singleFitness = new double[populationSize];
 		this.lenSingle = new double[populationSize];
+		this.mutator = new MultiPointMutation(mutationFactor, eddie.getTerms());
 	}
 
 	/**
@@ -45,8 +50,8 @@ public class TheGod {
 	 */
 	public void doEvolution() throws IOException {
 		Population[] population = new Population[2];
-		population[0] = new Population(this.inputData, populationSize);
-		population[1] = new Population(this.inputData, populationSize);
+		population[0] = new Population(this.inputData, populationSize, elitizam);
+		population[1] = new Population(this.inputData, populationSize, elitizam);
 		BufferedWriter writer = new BufferedWriter(new FileWriter("graf/graf.p"));
 		int currentPop = 0;
 		int newPop = 1;
@@ -69,7 +74,7 @@ public class TheGod {
 				Individual R2 = spinTheWheel(population[currentPop]);
 
 				Individual D1 = makeBabies(R1, R2, i, population[newPop]);
-				D1.mutate(mutationFactor, inputData.getTerms());
+				mutator.mutate(D1);
 			}
 
 			currentPop = (currentPop + 1) % 2;
@@ -87,9 +92,9 @@ public class TheGod {
 		double minFitness = p.getMinPopulationFitness();
 		
 		for (int i = 0; i < populationSize; i++) {
-			if (Math.abs(minFitness - p.getIndividual(i).fitness()) < 1e-6) {
+			if (Math.abs(minFitness - p.getIndividual(i).getFitness()) < 1e-6) {
 				//best = p.getIndividual(i);
-				System.out.println(p.printIndividual(i));
+				System.out.println(p.individualToString(i));
 				break;
 			}
 		}
@@ -132,7 +137,7 @@ public class TheGod {
 		double maxFitness = childrenOfGod.getMaxPopulationFitness();
 
 		for (int i = 0; i < size; i++) {
-			singleFitness[i] = maxFitness - childrenOfGod.getIndividual(i).fitness();
+			singleFitness[i] = maxFitness - childrenOfGod.getIndividual(i).getFitness();
 			fitnessSum += singleFitness[i];
 		}
 
@@ -183,32 +188,6 @@ public class TheGod {
 
 		newPop.setIndividaul(D1, index);
 		return D1;
-	}
-
-	/**
-	 * Metoda pretvara zadano rjesenje u String formata prikladnog za ispis u
-	 * datoteku.
-	 * 
-	 * @param timetable Raspored koji se formatira za ispis
-	 * @return String koji predstavlja zapis rasporeda u formatu specificiranom
-	 *         u zadatku
-	 */
-	public String printIndividual(Individual timetable) {
-		
-		StringBuilder sb = new StringBuilder();
-		int numberOfGenes = this.inputData.getExams().length;
-		ExamBean[] exams = this.inputData.getExams();
-
-		for (int i = 0; i < numberOfGenes; i++) {
-			TermBean term = timetable.getTerm(i);
-			ExamBean exam = exams[i];
-			sb.append(term.getDate()).append('\t').append(2).append('\t')
-					.append(exam.getClassName()).append('\t')
-					.append(Population.format00000(exam.getExamID()))
-					.append('\n');
-		}
-
-		return sb.toString();
 	}
 
 }

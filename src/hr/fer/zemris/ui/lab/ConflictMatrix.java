@@ -25,8 +25,7 @@ public class ConflictMatrix {
 	 * Stvara novu tablicu konflikata iz zadanog zadatka. Potrebni su samo
 	 * predmeti zadatka.
 	 * 
-	 * @param task
-	 *            zadatak
+	 * @param task zadatak
 	 */
 	public ConflictMatrix(ExamBean[] exams) {
 		conflictMatrix = new int[exams.length][exams.length];

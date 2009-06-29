@@ -77,26 +77,38 @@ public class Individual {
 	}
 
 	public void swapTerms() {
-		
 	}
 	
-	public void mutate(float mutationFactor, TermBean[] allTerms) {
-		//int sum = 0;
-		for (int i = 0; i < terms.length; i++) {
-			if (Math.random() < mutationFactor) {
-				int swpIndex = (int) Math.round(Math.random()*(allTerms.length-1));
-				setTerm(i, allTerms[swpIndex]);
-			//	sum++;
-			}
-		}
-		//System.out.println("Mutirao jedinku " + sum + " puta!");
-	}
-
 	public void setFitness(float f) {
 		this.fitness = f;
 	}
 	
-	public float fitness(){
+	public float getFitness() {
 		return this.fitness;
+	}
+	
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		
+		for (int i = 0; i < exams.length; i++) {
+			TermBean term = this.getTerm(i);
+			ExamBean exam = exams[i];
+			
+			sb	.append(term.getDate())
+				.append('\t')
+				.append(2)
+				.append('\t')
+				.append(exam.getClassName())
+				.append('\t');
+			
+			String id = Integer.toString(exam.getExamID());
+			int nl = id.length();
+			for (int j = nl; j < 5; j++) {
+				sb.append("0");
+			}
+			sb.append(id).append('\n');
+		}
+		
+		return sb.toString();
 	}
 }
