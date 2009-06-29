@@ -2,7 +2,6 @@ package hr.fer.zemris.ui.lab;
 
 import hr.fer.zemris.ui.lab.generator.ExamsData;
 import hr.fer.zemris.ui.lab.generator.beans.ExamBean;
-import hr.fer.zemris.ui.lab.generator.beans.TermBean;
 
 public class Population {
 	private Individual[] individuals;
@@ -14,9 +13,14 @@ public class Population {
 	private double avgPopulationFitness;
 	private double minPopulationFitness;
 	
+	// TODO: Mislim da ovo ne odgovara tu...
+	private boolean elitizam;
 	
-	public Population(ExamsData data, int populationSize) {
+	private Individual bestIndividual;
+	
+	public Population(ExamsData data, int populationSize, boolean elitizam) {
 		super();
+		this.elitizam = elitizam;
 		this.data = data;
 		this.exams = data.getExams();
 
@@ -54,43 +58,14 @@ public class Population {
 		this.individuals[index] = ind;
 	}
 	
-	public int size(){
+	public int size() {
 		return this.individuals.length;
 	}
 
-	public String printIndividual(int index) {
-		StringBuilder sb = new StringBuilder();
-		Individual timetable = individuals[index];
-		
-		for (int i = 0; i < exams.length; i++) {
-			TermBean term = timetable.getTerm(i);
-			ExamBean exam = exams[i];
-			sb	.append(term.getDate())
-				.append('\t')
-				.append(2)
-				.append('\t')
-				.append(exam.getClassName())
-				.append('\t')
-				.append(format00000(exam.getExamID()))
-				.append('\n');
-		}
-		
-		return sb.toString();
+	public String individualToString(int index) {
+		return individuals[index].toString();
 	}
 	
-	/**
-	 * LOL!
-	 */
-	public static String format00000(int num) {
-		String numS = Integer.toString(num);
-		int nl = numS.length();
-		for (int i = nl; i < 5; i++) {
-			numS = "0" + numS;
-		}
-		
-		return numS;
-	}
-
 	public void setPopulationFitness(double populationFitness, double max, double min, double avg) {
 		this.populationFitness = populationFitness;
 		this.maxPopulationFitness = max;
@@ -112,6 +87,14 @@ public class Population {
 
 	public double getMinPopulationFitness() {
 		return minPopulationFitness;
+	}
+
+	public Individual getBestIndividual() {
+		return bestIndividual;
+	}
+
+	public void setBestIndividual(Individual bestIndividual) {
+		this.bestIndividual = bestIndividual;
 	}
 	
 }

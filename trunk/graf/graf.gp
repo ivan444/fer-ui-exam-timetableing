@@ -12,5 +12,5 @@ set ylabel "Fitness"
 #set xr [0:15]
 #set yr [0:45]
 plot	"graf.p" using 1:2 title 'Minimum' with lines, \
-		"graf.p" using 1:3 title 'Prosjek' with linespoint
+		"graf.p" using 1:3 title 'Prosjek' with lines
 
