@@ -50,8 +50,8 @@ public class TheGod {
 	 */
 	public void doEvolution() throws IOException {
 		Population[] population = new Population[2];
-		population[0] = new Population(this.inputData, populationSize, elitizam);
-		population[1] = new Population(this.inputData, populationSize, elitizam);
+		population[0] = new Population(this.inputData, populationSize);
+		population[1] = new Population(this.inputData, populationSize);
 		BufferedWriter writer = new BufferedWriter(new FileWriter("graf/graf.p"));
 		int currentPop = 0;
 		int newPop = 1;
@@ -62,11 +62,6 @@ public class TheGod {
 
 			evaluatePopulation(population[currentPop]);
 
-//			System.out.println("generacija " + k);
-//			System.out.println("f(min) = " + population[currentPop].getMinPopulationFitness());
-//			System.out.println("f(max) = " + population[currentPop].getMaxPopulationFitness());
-//			System.out.println("f(avg) = " + population[currentPop].getAvgPopulationFitness());
-//			System.out.println();
 			writer.write(k + "\t" + population[currentPop].getMinPopulationFitness() + "\t" + population[currentPop].getAvgPopulationFitness() + "\n");
 			for (int i = 0; i < populationSize; i++) {
 
@@ -79,13 +74,8 @@ public class TheGod {
 
 			currentPop = (currentPop + 1) % 2;
 			newPop = (newPop + 1) % 2;
-
-//			try {
-//				Thread.sleep(1000);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
 		}
+		
 		writer.close();
 		Population p = population[newPop];
 		evaluatePopulation(p);
