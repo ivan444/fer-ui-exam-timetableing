@@ -21,6 +21,7 @@ public class ExamsData {
 	private ParallelExamsBean[] parallelExams;
 	private AllowedTermsBean[] allowedTerms;
 	
+	
 	// TODO: Srediti obradu exceptiona! Većinu zanemariti osim bounds i arguments...
 	public ExamsData(String path) throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(path));
@@ -211,4 +212,35 @@ public class ExamsData {
 		return startLine + num;
 		
 	}
+	
+	
+	/**
+	 * Metoda trazi indekse svih fiksnih termina. 
+	 * @return niz indeksa fiksnih termina
+	 */
+	public int[] getFixedTermExamIndexes(){
+		
+		//Postoje dva niza. Niz exama sa fiksnim terminima
+		// i niz svih exama zajedno. Index i-tog fiksnog 
+		// termina je j-ti indeks u nizu svih exama zajedno.
+		 
+		
+		int[] fixedTermIndexes = new int[fixedTerms.length];
+		
+		for (int i = 0; i < fixedTerms.length; i++) {
+			
+			FixedTermBean fTerm = fixedTerms[i];
+			
+			for (int j = 0; j < exams.length; j++) {
+				if (fTerm.getExamID() == exams[j].getExamID()){
+					fixedTermIndexes[i] = j;
+					break;
+				}
+			}
+			
+		}
+		
+		return fixedTermIndexes;
+	}
+
 }

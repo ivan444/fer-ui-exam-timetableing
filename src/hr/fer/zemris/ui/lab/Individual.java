@@ -12,14 +12,17 @@ public class Individual {
 	private TermBean[] terms;
 	private ExamBean[] exams;
 
+	private int[] fixedTermIndexes;
+	
 	// TODO: dodati term day difference matricu
 	private Map<TermBean, List<ExamBean>> examsInTerm;
 	
 	private float fitness;
 	
-	public Individual(ExamBean[] exams) {
+	public Individual(ExamBean[] exams, int[] fixedTerms) {
 		this.terms = new TermBean[exams.length];
 		this.exams = exams;
+		this.fixedTermIndexes = fixedTerms;
 		
 		this.examsInTerm = new HashMap<TermBean, List<ExamBean>>(terms.length);
 	}
@@ -33,6 +36,11 @@ public class Individual {
 	}
 	
 	public void setTerm(int index, TermBean term) {
+		
+		if (isFixedIndex(index)) {
+			return; //fiksne termine ne mijenjamo!!!
+		}
+		
 		TermBean oldTerm = terms[index];
 		if (oldTerm != null) {
 			removeExamFromTerm(oldTerm, index);
@@ -53,6 +61,28 @@ public class Individual {
 		examList.add(exam);
 	}
 	
+	public void setFixedTerm(int index, TermBean term) {
+		
+		if (!isFixedIndex(index)) throw new IllegalArgumentException("Pokusaj ilegalnog ubacivanja u fiksni termin!");
+		
+		TermBean oldTerm = terms[index];
+		if (oldTerm != null) {
+			removeExamFromTerm(oldTerm, index);
+		}
+		
+		this.terms[index] = term;
+
+		List<ExamBean> examList = this.examsInTerm.get(term);
+		
+		if (examList == null){
+			examList = new ArrayList<ExamBean>();
+			this.examsInTerm.put(term,examList);
+			
+		}
+		ExamBean exam = this.exams[index];
+		examList.add(exam);
+	}
+
 	private void removeExamFromTerm(TermBean term, int examIndex) {
 		List<ExamBean> examList = this.examsInTerm.get(term);
 		int toRemove = -1;
@@ -107,5 +137,15 @@ public class Individual {
 		}
 		
 		return sb.toString();
+	}
+	
+	public boolean isFixedIndex(int index) {
+		
+		for (int i = 0; i < fixedTermIndexes.length; i++) {
+			
+			if (fixedTermIndexes[i] == index) return true;
+			
+		}
+		return false;
 	}
 }

@@ -24,13 +24,12 @@ public class TheGod {
 	private Random randomGenerator;
 	private double[] singleFitness;
 	private double[] lenSingle;
-	// ovdje bismo mogli definirati parametre genetskog algoritma
-	// evo samo neki za primjer:
-	private int populationSize = 100; //Adam & Eve
+	
+	
+	private int populationSize = 100;
 	final private float mutationFactor = 0.001f; //No mutants allowed!
-//	private boolean incest = false; //No Fritzl allowed!
-//	private int numberOfParents = 2; //No orgies allowed!
-	private boolean elitizam = true;
+
+	//private boolean elitizam = true;
 	
 	private Evaluator evaluator;
 
@@ -63,6 +62,9 @@ public class TheGod {
 			evaluatePopulation(population[currentPop]);
 
 			writer.write(k + "\t" + population[currentPop].getMinPopulationFitness() + "\t" + population[currentPop].getAvgPopulationFitness() + "\n");
+			
+			if (k % 50 == 0) System.out.println("generacija " + k);
+			
 			for (int i = 0; i < populationSize; i++) {
 
 				Individual R1 = spinTheWheel(population[currentPop]);
