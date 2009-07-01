@@ -76,9 +76,6 @@ public class Individual {
 		return this.examsInTerm.get(term);
 	}
 
-	public void swapTerms() {
-	}
-	
 	public void setFitness(float f) {
 		this.fitness = f;
 	}
