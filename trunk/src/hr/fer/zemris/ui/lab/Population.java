@@ -9,6 +9,8 @@ public class Population {
 	private Individual[] individuals;
 	private ExamBean[] exams;
 	private ExamsData data;
+	private Individual bestIndividual;
+	private int bestIndividualIndex;
 	
 	private int[] fixedTermIndexes;
 
@@ -22,7 +24,8 @@ public class Population {
 		this.data = data;
 		this.exams = data.getExams();
 		this.fixedTermIndexes = data.getFixedTermExamIndexes();
-		individuals = new Individual[populationSize];
+		this.individuals = new Individual[populationSize];
+		this.bestIndividualIndex = -1;
 		generateInitialPopulation();
 		
 	}
@@ -129,5 +132,21 @@ public class Population {
 		}
 		
 		return null;
+	}
+
+	public Individual getBestIndividual() {
+		return bestIndividual;
+	}
+
+	public void setBestIndividual(Individual bestIndividual) {
+		this.bestIndividual = bestIndividual;
+	}
+
+	public int getBestIndividualIndex() {
+		return bestIndividualIndex;
+	}
+
+	public void setBestIndividualIndex(int bestIndividualIndex) {
+		this.bestIndividualIndex = bestIndividualIndex;
 	}
 }
