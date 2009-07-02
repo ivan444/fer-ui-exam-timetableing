@@ -43,14 +43,12 @@ public class Population {
 		Individual created = new Individual(exams,fixedTermIndexes);
 
 		for (int i = 0; i < examsNum; i++) {
-			
 			if (isFixedIndex(i)){
 				created.setFixedTerm(i, getTermForFixed(i));
 			} else {
 				int index = (int) Math.round(Math.random() * (termsNum - 1));
 				created.setTerm(i, data.getTerms()[index]);
 			}
-			
 			
 		}
 		return created;
@@ -59,10 +57,9 @@ public class Population {
 	public boolean isFixedIndex(int index) {
 		
 		for (int i = 0; i < fixedTermIndexes.length; i++) {
-			
 			if (fixedTermIndexes[i] == index) return true;
-			
 		}
+		
 		return false;
 	}
 
@@ -111,7 +108,6 @@ public class Population {
 	}
 	
 	public TermBean getTermForFixed(int index) {
-		
 		ExamBean exam = exams[index];
 		FixedTermBean[] fiksni = data.getFixedTerms();
 		

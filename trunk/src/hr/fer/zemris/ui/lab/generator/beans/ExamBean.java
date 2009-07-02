@@ -10,6 +10,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Ivan Krišto
  * 
  */
+// FIXME: Test više ne valja jer se studenti sortiraju po hashu JMBAG-a!
 public class ExamBean {
 	private int examID;
 	private String className;
@@ -33,7 +34,7 @@ public class ExamBean {
 		setExamID(examID);
 
 		setClassName(parts[1]);
-
+		
 		String[] students = StringUtils.split(parts[2], ',');
 		// Uklanjanje oznake kraja reda ili krajnjih razmaka ako postoje.
 		students[students.length - 1] = students[students.length - 1].trim();

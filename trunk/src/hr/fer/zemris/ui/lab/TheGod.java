@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import hr.fer.zemris.ui.lab.generator.ExamsData;
-import hr.fer.zemris.ui.lab.generika.BinarnoKrizanje;
 import hr.fer.zemris.ui.lab.generika.Krizanje;
 import hr.fer.zemris.ui.lab.generika.MultiPointMutation;
 import hr.fer.zemris.ui.lab.generika.Mutator;
