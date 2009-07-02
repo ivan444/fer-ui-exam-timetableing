@@ -22,6 +22,9 @@ public class TheGod {
 	private Mutator mutator;
 	private ConflictMatrix conflictMatrix;
 	private Random randomGenerator;
+	private Rectifier rectifier;
+	private Evaluator evaluator;
+	
 	private double[] singleFitness;
 	private double[] lenSingle;
 	
@@ -31,7 +34,7 @@ public class TheGod {
 
 	//private boolean elitizam = true;
 	
-	private Evaluator evaluator;
+	
 
 	public TheGod(ExamsData eddie) {
 		this.inputData = eddie;
@@ -41,6 +44,7 @@ public class TheGod {
 		this.singleFitness = new double[populationSize];
 		this.lenSingle = new double[populationSize];
 		this.mutator = new MultiPointMutation(mutationFactor, eddie.getTerms());
+		this.rectifier = new Rectifier(eddie);
 	}
 
 	/**
@@ -57,13 +61,16 @@ public class TheGod {
 
 		int k = 0;
 
-		while (k++ < 1000) {
+		while (k++ < 100) {
 
 			evaluatePopulation(population[currentPop]);
 
 			writer.write(k + "\t" + population[currentPop].getMinPopulationFitness() + "\t" + population[currentPop].getAvgPopulationFitness() + "\n");
 			
-			if (k % 50 == 0) System.out.println("generacija " + k);
+			if (k % 50 == 0) {
+				System.out.println("generacija " + k);
+				System.out.println(population[currentPop].getMinPopulationFitness() + "\t" + population[currentPop].getAvgPopulationFitness());
+			}
 			
 			for (int i = 0; i < populationSize; i++) {
 
@@ -72,6 +79,8 @@ public class TheGod {
 
 				Individual D1 = makeBabies(R1, R2, i, population[newPop]);
 				mutator.mutate(D1);
+				rectifier.rectifie(D1);
+				
 			}
 
 			currentPop = (currentPop + 1) % 2;
