@@ -77,8 +77,8 @@ public class ExamDataTest {
 			sbReader.append(line.trim()).append('\n');
 		}
 		reader.close();
-		
-		Assert.assertTrue(sbReader.toString().equals(sbLoaded.toString()));
+		System.out.println(sbLoaded.toString());
+		Assert.assertTrue(sbReader.toString().trim().equals(sbLoaded.toString().trim()));
 	}
 	
 	private String format00000(int num) {
