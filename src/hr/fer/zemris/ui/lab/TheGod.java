@@ -50,7 +50,7 @@ public class TheGod {
 
 		int k = 0;
 
-		while (k++ < 50) {
+		while (k++ < 300) {
 			evaluatePopulation(population[currentPop]);
 			writer.write(k + "\t" + population[currentPop].getMinPopulationFitness() + "\t" + population[currentPop].getAvgPopulationFitness() + "\n");
 			

@@ -12,12 +12,12 @@ import org.apache.commons.lang.StringUtils;
  */
 // FIXME: Test više ne valja jer se studenti sortiraju po hashu JMBAG-a!
 public class ExamBean {
-	private int examID;
-	private String className;
-	private String[] students;
-	private int[] studentsHash;
+	protected int examID;
+	protected String className;
+	protected String[] students;
+	protected int[] studentsHash;
 
-	private int index;
+	protected int index;
 
 	public ExamBean() {
 	}
@@ -46,7 +46,7 @@ public class ExamBean {
 	/**
 	 * Računa hash niza JMBAG-ova studenata i pohranjuje ih u novi niz.
 	 */
-	private void calcStudentsHash() {
+	protected void calcStudentsHash() {
 		studentsHash = new int[students.length];
 		for (int i = 0; i < students.length; i++) {
 			String num = "0x" + students[i].substring(2, 9);
@@ -74,7 +74,7 @@ public class ExamBean {
 	 * @param lo lower index of the region of array a that is to be sorted
 	 * @param hi upper index of the region of array a that is to be sorted
 	 */
-	void quicksort(int[] a, int lo, int hi) {
+	protected void quicksort(int[] a, int lo, int hi) {
 		int i = lo, j = hi, h;
 		int x = a[(lo + hi) / 2];
 
@@ -104,7 +104,7 @@ public class ExamBean {
 			quicksort(a, i, hi);
 	}
 
-	private void sortStudents() {
+	protected void sortStudents() {
 		quicksort(studentsHash, 0, studentsHash.length-1);
 	}
 
@@ -149,7 +149,6 @@ public class ExamBean {
 	}
 
 	@Override
-	// TODO: Provjeri je li format i dalje ok (tj. jesam li dobro ovo prepravio... Ivan...)
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 
@@ -161,6 +160,26 @@ public class ExamBean {
 		}
 		sb.append(broj).append(")");
 
+		return sb.toString();
+	}
+	
+	public String printToString(TermBean term) {
+		StringBuilder sb = new StringBuilder();
+		
+		sb	.append(term.getDate())
+			.append('\t')
+			.append(2)
+			.append('\t')
+			.append(getClassName())
+			.append('\t');
+		
+		String id = Integer.toString(getExamID());
+		int nl = id.length();
+		for (int j = nl; j < 5; j++) {
+			sb.append("0");
+		}
+		sb.append(id).append('\n');
+		
 		return sb.toString();
 	}
 

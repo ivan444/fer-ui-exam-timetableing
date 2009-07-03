@@ -40,7 +40,7 @@ public class Population {
 	private Individual createRandomIndividual() {
 		int examsNum = exams.length;
 		int termsNum = data.getTerms().length;
-		Individual created = new Individual(data);
+		Individual created = new Individual(exams,fixedTermIndexes);
 
 		for (int i = 0; i < examsNum; i++) {
 			if (isFixedIndex(i)){
