@@ -8,11 +8,11 @@ import hr.fer.zemris.ui.lab.generator.beans.TermBean;
 public class AIDS extends Killer {
 
 	
-	public AIDS(ExamsData input){
-		super(input);
+	public AIDS(ExamsData input, float deathProbability){
+		super(input, deathProbability);
 	}
 	@Override
-	public void kill(float deathProbability, Individual ind) {
+	public void kill(Individual ind) {
 		
 		if (Math.random() < deathProbability) {
 			
