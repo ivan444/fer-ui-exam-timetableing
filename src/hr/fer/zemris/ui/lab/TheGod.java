@@ -23,17 +23,20 @@ public class TheGod {
 	private Krizanje krizanje;
 	private Rectifier rectifier;
 	private Evaluator evaluator;
-	private int populationSize = 1000;
-	final private float mutationFactor = 0.001f;
-	private boolean elitizam = true;
+	private int populationSize = 50;
+	private boolean elitizam;
+	private int genNum;
 
-	public TheGod(ExamsData eddie) {
+	public TheGod(ExamsData eddie, int populationSize, float mutationFactor, int genNum, boolean elitizam) {
 		this.inputData = eddie;
 		this.conflictMatrix = new ConflictMatrix(eddie.getExams());
 		this.evaluator = new Evaluator(eddie, this.conflictMatrix);
 		this.mutator = new MultiPointMutation(mutationFactor, eddie.getTerms());
 		this.krizanje = new TroturnirskoKrizanje(populationSize, inputData.getExams().length);
 		this.rectifier = new Rectifier(eddie);
+		this.populationSize = populationSize;
+		this.genNum = genNum;
+		this.elitizam = true;
 	}
 
 	/**
@@ -50,7 +53,7 @@ public class TheGod {
 
 		int k = 0;
 
-		while (k++ < 300) {
+		while (k++ < genNum) {
 			evaluatePopulation(population[currentPop]);
 			writer.write(k + "\t" + population[currentPop].getMinPopulationFitness() + "\t" + population[currentPop].getAvgPopulationFitness() + "\n");
 			
