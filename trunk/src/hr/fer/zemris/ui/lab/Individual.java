@@ -1,10 +1,6 @@
 package hr.fer.zemris.ui.lab;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import hr.fer.zemris.ui.lab.generator.ExamsData;
 import hr.fer.zemris.ui.lab.generator.beans.ExamBean;
 import hr.fer.zemris.ui.lab.generator.beans.TermBean;
 
@@ -15,18 +11,17 @@ public class Individual {
 	private int[] fixedTermIndexes;
 	
 	// TODO: dodati term day difference matricu
-	private Map<TermBean, List<ExamBean>> examsInTerm;
-	// TODO: Izbaciti mapu i koristiti ovo dolje komentirano. Sve prilagodim tome nakon ispita. Odoh učit! ;D
-	//private TermExamMatrix examsInTerm;
+	//private Map<TermBean, List<ExamBean>> examsInTerm;
+	private TermExamMatrix examsInTerm;
 	
 	private float fitness;
 	
-	public Individual(ExamBean[] exams, int[] fixedTerms) {
-		this.terms = new TermBean[exams.length];
-		this.exams = exams;
-		this.fixedTermIndexes = fixedTerms;
+	public Individual(ExamsData examData) {
+		this.terms = new TermBean[examData.getExams().length];
+		this.exams = examData.getExams();
+		this.fixedTermIndexes = examData.getFixedTermExamIndexes();
 		
-		this.examsInTerm = new HashMap<TermBean, List<ExamBean>>(terms.length);
+		this.examsInTerm = new TermExamMatrix(examData.getTerms(), examData.getExams().length);
 	}
 	
 	public TermBean getTerm(int index) {
@@ -50,17 +45,8 @@ public class Individual {
 		
 		this.terms[index] = term;
 
-		List<ExamBean> examList = this.examsInTerm.get(term);
-		
-		// i ovaj new bi trebalo izbaciti van. mogli bi prije algoritma
-		// instancirati sve lista svih termina pa onda ova provjera nije ni potreba!
-		if (examList == null){
-			examList = new ArrayList<ExamBean>();
-			this.examsInTerm.put(term,examList);
-			
-		}
 		ExamBean exam = this.exams[index];
-		examList.add(exam);
+		this.examsInTerm.addTermExam(term, exam);
 	}
 	
 	public void setFixedTerm(int index, TermBean term) {
@@ -74,29 +60,12 @@ public class Individual {
 		
 		this.terms[index] = term;
 
-		List<ExamBean> examList = this.examsInTerm.get(term);
-		
-		if (examList == null){
-			examList = new ArrayList<ExamBean>();
-			this.examsInTerm.put(term,examList);
-			
-		}
 		ExamBean exam = this.exams[index];
-		examList.add(exam);
+		this.examsInTerm.addTermExam(term, exam);
 	}
 
 	private void removeExamFromTerm(TermBean term, int examIndex) {
-		List<ExamBean> examList = this.examsInTerm.get(term);
-		int toRemove = -1;
-		for (int i = 0; i < examList.size(); i++) {
-			if (examList.get(i).index() == examIndex) {
-				toRemove = i;
-				break;
-			}
-			
-		}
-		
-		examList.remove(toRemove);
+		this.examsInTerm.removeTermExam(term, exams[examIndex]);
 	}
 	
 	/**
@@ -104,8 +73,8 @@ public class Individual {
 	 * @param term Termin ciji se kolegiji dohvacaju
 	 * @return lista ispita u terminu
 	 */
-	public List<ExamBean> getExamsInTerm(TermBean term){
-		return this.examsInTerm.get(term);
+	public ExamBean[] getExamsInTerm(TermBean term){
+		return this.examsInTerm.getAllExams(term);
 	}
 
 	public void setFitness(float f) {
@@ -144,10 +113,9 @@ public class Individual {
 	public boolean isFixedIndex(int index) {
 		
 		for (int i = 0; i < fixedTermIndexes.length; i++) {
-			
 			if (fixedTermIndexes[i] == index) return true;
-			
 		}
+		
 		return false;
 	}
 }
