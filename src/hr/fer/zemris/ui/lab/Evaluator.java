@@ -2,7 +2,6 @@ package hr.fer.zemris.ui.lab;
 
 import hr.fer.zemris.ui.lab.generator.ExamsData;
 import hr.fer.zemris.ui.lab.generator.beans.ExamBean;
-import hr.fer.zemris.ui.lab.generator.beans.FixedTermBean;
 import hr.fer.zemris.ui.lab.generator.beans.TermBean;
 
 import java.util.List;
@@ -19,48 +18,11 @@ public class Evaluator {
 
 	public float evaluateFitness(Individual timetable) {
 		// Ovo je ukradeno iz evaluatora, no license agreement :-P
-
-		if (isEveryCourseInAcceptableTerm(timetable) == false
-				|| isCourseClustersTogether(timetable) == false
-				|| isEveryFixedCourseInFixedTerm(timetable) == false) {
-			return Float.MAX_VALUE;
-		}
-		return 10000 * countConflictedStudents(timetable) + 10000
-				* countCapacityOverflow(timetable) + 4
-				* countStudentsWithExamsInDayDiference(timetable, 0) //ispiti u istom danu
-				+ countStudentsWithExamsInDayDiference(timetable, 1); // ispiti u sljedecem danu
-	}
-
-	private boolean isEveryFixedCourseInFixedTerm(Individual timetable) {
-		FixedTermBean[] fixed = inputData.getFixedTerms();
-		TermBean[] terms = timetable.getSolutionTerms();
-		ExamBean[] exams = inputData.getExams();
 		
-		for (int i = 0; i < terms.length; i++) {
-			TermBean term = terms[i];
-			String odabranDatum = term.getDate();
-			
-			for (FixedTermBean fixedTerm : fixed) {
-				if (fixedTerm.getExamID() == exams[i].getExamID()) {
-					String trebaDatum = fixedTerm.getDate();
-					if (!trebaDatum.equals(odabranDatum)) {
-						return true;
-					}
-				}
-			}
-		}
-			
-		return true;
-	}
-
-	private boolean isCourseClustersTogether(Individual timetable) {
-		// TODO: Do implement, please
-		return true;
-	}
-
-	private boolean isEveryCourseInAcceptableTerm(Individual timetable) {
-		// TODO: Do implement, please
-		return true;
+		return 10000 * countConflictedStudents(timetable) +
+				10000* countCapacityOverflow(timetable) + 
+				4* countStudentsWithExamsInDayDiference(timetable, 0) //ispiti u istom danu
+				+ countStudentsWithExamsInDayDiference(timetable, 1); // ispiti u sljedecem danu
 	}
 
 	private int countStudentsWithExamsInDayDiference(Individual timetable, int delta) {
