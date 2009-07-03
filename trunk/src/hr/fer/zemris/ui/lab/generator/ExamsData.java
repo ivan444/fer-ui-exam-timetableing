@@ -5,11 +5,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
 import hr.fer.zemris.ui.lab.generator.beans.AllowedTermsBean;
 import hr.fer.zemris.ui.lab.generator.beans.ExamBean;
+import hr.fer.zemris.ui.lab.generator.beans.ExamBeanParallel;
 import hr.fer.zemris.ui.lab.generator.beans.FixedTermBean;
 import hr.fer.zemris.ui.lab.generator.beans.ParallelExamsBean;
 import hr.fer.zemris.ui.lab.generator.beans.TermBean;
@@ -54,6 +57,8 @@ public class ExamsData {
 			allowedTerms = new AllowedTermsBean[num];	// FIXME: Bio je problem sa korištenjem reflectiona... nisam htio bacati još vremena.
 			startLine = load(reader, startLine, num, allowedTerms, "hr.fer.zemris.ui.lab.generator.beans.AllowedTermsBean");
 			
+			mergeParallelExams();
+			
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		} catch (InstantiationException e) {
@@ -72,92 +77,90 @@ public class ExamsData {
 		
 	}
 	
-	// TODO: Mislim da zakomentirane metode ipak ne trebaju.
-//	public boolean addExam(int index, ExamBean exam) {
-//		if (exams == null) return false;
-//		if (index >= exams.length) return false;
-//		if (index < 0) return false;
-//		
-//		exams[index] = exam;
-//		return true;
-//	}
-//	
-//	public boolean addTerm(int index, TermBean term) {
-//		if (terms == null) return false;
-//		if (index >= terms.length) return false;
-//		if (index < 0) return false;
-//		
-//		terms[index] = term;
-//		return true;
-//	}
-//	
-//	public boolean addFixedTerm(int index, FixedTermBean fTerm) {
-//		if (fixedTerms == null) return false;
-//		if (index >= fixedTerms.length) return false;
-//		if (index < 0) return false;
-//		
-//		fixedTerms[index] = fTerm;
-//		return true;
-//	}
-//	
-//	public boolean addParallelExams(int index, ParallelExamsBean pExams) {
-//		if (parallelExams == null) return false;
-//		if (index >= parallelExams.length) return false;
-//		if (index < 0) return false;
-//		
-//		parallelExams[index] = pExams;
-//		return true;
-//	}
-//	
-//	public boolean addAllowedTerms(int index, AllowedTermsBean aTerms) {
-//		if (allowedTerms == null) return false;
-//		if (index >= allowedTerms.length) return false;
-//		if (index < 0) return false;
-//		
-//		allowedTerms[index] = aTerms;
-//		return true;
-//	}
-	
+	private void mergeParallelExams() {
+		int newId = -1;
+		List<ExamBeanParallel> newExams = new LinkedList<ExamBeanParallel>();
+		int merged = 0;
+		
+		for (int i = 0; i < parallelExams.length; i++) {
+			
+			List<ExamBean> examList = new LinkedList<ExamBean>();
+			int[] examIDs = parallelExams[i].getExamIDs();
+			
+			for (int j = 0; j < exams.length; j++) {
+				if (exams[j] == null) continue;
+				for (int k = 0; k < examIDs.length; k++) {
+					if (exams[j].getExamID() == examIDs[k]) {
+						examList.add(exams[j]);
+						merged++;
+						exams[j] = null;
+						break;
+					}
+				}
+			}
+			
+			newExams.add(new ExamBeanParallel(examList.toArray(new ExamBean[0]), newId));
+			
+			for (ExamBean e : examList) {
+				for (int j = 0; j < fixedTerms.length; j++) {
+					if (e.getExamID() == fixedTerms[j].getExamID()) {
+						fixedTerms[j].setExamID(newId);
+					}
+				}
+			}
+			
+			// TODO: Zasad se ne gleda ima li više ispita allowed, pa se traži presjek nego se samo krca...
+			// Zapravo, nemamo pojma kakvi su ulazni podatci, tako da možemo pretpostaviti da je ovo ok (valjda...)
+			for (ExamBean e : examList) {
+				for (int j = 0; j < allowedTerms.length; j++) {
+					if (e.getExamID() == allowedTerms[j].getExamID()) {
+						allowedTerms[j].setExamID(newId);
+					}
+				}
+			}
+			
+			merged--;
+			newId--;
+		}
+		
+		ExamBean[] updatedExams = new ExamBean[exams.length-merged];
+		int ueIndex = 0;
+		for (int i = 0; i < exams.length; i++) {
+			if (exams[i] != null) {
+				updatedExams[ueIndex] = exams[i];
+				ueIndex++;
+			}
+		}
+		
+		for (ExamBeanParallel ebp : newExams) {
+			updatedExams[ueIndex] = ebp;
+			ueIndex++;
+		}
+		
+		this.exams = updatedExams;
+		
+	}
+
 	public ExamBean[] getExams() {
 		return exams;
 	}
-
-//	public void setExams(ExamBean[] exams) {
-//		this.exams = exams;
-//	}
 
 	public TermBean[] getTerms() {
 		return terms;
 	}
 
-//	public void setTerms(TermBean[] terms) {
-//		this.terms = terms;
-//	}
-
 	public FixedTermBean[] getFixedTerms() {
 		return fixedTerms;
 	}
-
-//	public void setFixedTerms(FixedTermBean[] fixedTerms) {
-//		this.fixedTerms = fixedTerms;
-//	}
 
 	public ParallelExamsBean[] getParallelExams() {
 		return parallelExams;
 	}
 
-//	public void setParallelExams(ParallelExamsBean[] parallelExams) {
-//		this.parallelExams = parallelExams;
-//	}
-
 	public AllowedTermsBean[] getAllowedTerms() {
 		return allowedTerms;
 	}
 
-//	public void setAllowedTerms(AllowedTermsBean[] allowedTerms) {
-//		this.allowedTerms = allowedTerms;
-//	}
-	
 	private int readNum(BufferedReader reader, int startLine) throws IOException {
 		String line = null;
 		
@@ -219,12 +222,10 @@ public class ExamsData {
 	 * @return niz indeksa fiksnih termina
 	 */
 	public int[] getFixedTermExamIndexes(){
-		
 		//Postoje dva niza. Niz exama sa fiksnim terminima
 		// i niz svih exama zajedno. Index i-tog fiksnog 
 		// termina je j-ti indeks u nizu svih exama zajedno.
 		 
-		
 		int[] fixedTermIndexes = new int[fixedTerms.length];
 		
 		for (int i = 0; i < fixedTerms.length; i++) {
