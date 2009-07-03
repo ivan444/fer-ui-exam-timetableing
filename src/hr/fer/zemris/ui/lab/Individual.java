@@ -16,6 +16,8 @@ public class Individual {
 	
 	// TODO: dodati term day difference matricu
 	private Map<TermBean, List<ExamBean>> examsInTerm;
+	// TODO: Izbaciti mapu i koristiti ovo dolje komentirano. Sve prilagodim tome nakon ispita. Odoh učit! ;D
+	//private TermExamMatrix examsInTerm;
 	
 	private float fitness;
 	

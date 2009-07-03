@@ -50,7 +50,7 @@ public class TheGod {
 
 		int k = 0;
 
-		while (k++ < 100) {
+		while (k++ < 300) {
 
 			evaluatePopulation(population[currentPop]);
 
