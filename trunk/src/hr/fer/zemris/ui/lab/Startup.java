@@ -14,7 +14,7 @@ public class Startup {
 		String path = "podatci/primjer_problema.txt";
 		ExamsData ed = new ExamsData(path);
 		
-		TheGod god = new TheGod(ed, 50, 0.001f, 400, true);
+		TheGod god = new TheGod(ed, 50, 0.001f, 1000, true);
 		god.doEvolution();
 	}
 	
