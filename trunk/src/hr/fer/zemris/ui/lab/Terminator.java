@@ -12,6 +12,7 @@ import java.io.File;
 public class Terminator implements Runnable {
 	private int checkInterval;
 	private String termDat;
+	private TheGod god;
 	
 	/**
 	 * Konstruktor.
@@ -19,9 +20,10 @@ public class Terminator implements Runnable {
 	 * @param checkInterval Vrijeme u sekundama koje treba proći između dvije provjere.
 	 * @param termDat Naziv datoteke koja označava da trebamo terminirati generator.
 	 */
-	private Terminator(int checkInterval, String termDat) {
+	private Terminator(int checkInterval, String termDat, TheGod god) {
 		this.checkInterval = checkInterval;
 		this.termDat = termDat;
+		this.god = god;
 	}
 	
 	/**
@@ -30,8 +32,8 @@ public class Terminator implements Runnable {
 	 * @param checkInterval Vrijeme u sekundama koje treba proći između dvije provjere.
 	 * @param termDat Naziv datoteke koja označava da trebamo terminirati generator.
 	 */
-	public static void startTerminator(int checkInterval, String termDat) {
-		new Thread(new Terminator(checkInterval, termDat)).start();
+	public static void startTerminator(int checkInterval, String termDat, TheGod god) {
+		new Thread(new Terminator(checkInterval, termDat, god)).start();
 	}
 	
 	@Override
@@ -48,6 +50,6 @@ public class Terminator implements Runnable {
 			}
 		}
 		
-		Startup.stop();
+		god.terminate();
 	}
 }

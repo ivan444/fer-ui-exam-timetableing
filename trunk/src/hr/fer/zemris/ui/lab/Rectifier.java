@@ -5,14 +5,12 @@ import java.util.Random;
 import hr.fer.zemris.ui.lab.generator.ExamsData;
 import hr.fer.zemris.ui.lab.generator.beans.AllowedTermsBean;
 import hr.fer.zemris.ui.lab.generator.beans.ExamBean;
-import hr.fer.zemris.ui.lab.generator.beans.ParallelExamsBean;
 import hr.fer.zemris.ui.lab.generator.beans.TermBean;
 
 public class Rectifier {
 	
 	private ExamBean[] exams;
 	private AllowedTermsBean[] allowedTerms;
-	private ParallelExamsBean[] parallerExams;
 	private TermBean[] allTerms;
 	
 	private Random randomGenerator;
@@ -20,7 +18,6 @@ public class Rectifier {
 	public Rectifier(ExamsData data){
 		this.exams = data.getExams();
 		this.allowedTerms = data.getAllowedTerms();
-		this.parallerExams = data.getParallelExams();
 		this.allTerms = data.getTerms();
 		this.randomGenerator = new Random();
 		

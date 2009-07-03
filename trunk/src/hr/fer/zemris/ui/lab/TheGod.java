@@ -1,17 +1,14 @@
 package hr.fer.zemris.ui.lab;
 
 import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 
 import hr.fer.zemris.ui.lab.generator.ExamsData;
-import hr.fer.zemris.ui.lab.generika.BinarnoKrizanje;
 import hr.fer.zemris.ui.lab.generika.FrameShiftMutation;
 import hr.fer.zemris.ui.lab.generika.Krizanje;
 import hr.fer.zemris.ui.lab.generika.MultiPointMutation;
 import hr.fer.zemris.ui.lab.generika.Mutator;
 import hr.fer.zemris.ui.lab.generika.TroturnirskoKrizanje;
-import hr.fer.zemris.ui.lab.generika.TroturnirskoKrizanjeMultiBreak;
 
 /**
  * Klasa koja sadrzi mehanizme potrebne za simuliranje evolucije genetskim
@@ -25,11 +22,13 @@ public class TheGod {
 	private ConflictMatrix conflictMatrix;
 	private Krizanje krizanje;
 	private Rectifier rectifier;
+//	private Killer killer;
 	private Evaluator evaluator;
 	private int populationSize = 50;
 	private float mutationFactor;
 	private boolean elitizam;
-	private int genNum;
+//	private int genNum;
+	private boolean terminate;
 
 	public TheGod(ExamsData eddie, int populationSize, float mutationFactor, int genNum, boolean elitizam) {
 		this.inputData = eddie;
@@ -38,21 +37,23 @@ public class TheGod {
 		this.mutator = new MultiPointMutation(mutationFactor, eddie.getTerms());
 		this.krizanje = new TroturnirskoKrizanje(populationSize, inputData.getExams().length);
 		this.rectifier = new Rectifier(eddie);
+//		this.killer = new AIDS(eddie, 0.01f);
 		this.populationSize = populationSize;
-		this.genNum = genNum;
+//		this.genNum = genNum;
 		this.elitizam = true;
 		this.mutationFactor = mutationFactor;
+		this.terminate = false;
 	}
-
+	
 	/**
 	 * Ova metoda modelira genetski algoritam.
 	 * @throws IOException 
 	 */
-	public void doEvolution() throws IOException {
+	public void doEvolution(BufferedWriter writer) throws IOException {
 		Population[] population = new Population[2];
 		population[0] = new Population(this.inputData, populationSize);
 		population[1] = new Population(this.inputData, populationSize);
-		BufferedWriter writer = new BufferedWriter(new FileWriter("graf/graf.p"));
+		
 		int currentPop = 0;
 		int newPop = 1;
 		
@@ -72,10 +73,9 @@ public class TheGod {
 //		krizanje = crossers[crossIndex];
 		
 		int k = 0;
-
-		while (k++ < genNum) {
-			
-			if (k % 50 == 0) {
+		while (!terminate) {
+			k++;
+			if (k % 100 == 0) {
 				mutator = mutators[(mutIndex + 1)%mutCount];
 			}
 			
@@ -84,7 +84,7 @@ public class TheGod {
 //			}
 			
 			evaluatePopulation(population[currentPop]);
-			writer.write(k + "\t" + population[currentPop].getMinPopulationFitness() + "\t" + population[currentPop].getAvgPopulationFitness() + "\n");
+			//writer.write(k + "\t" + population[currentPop].getMinPopulationFitness() + "\t" + population[currentPop].getAvgPopulationFitness() + "\n");
 			
 			for (int i = 0; i < populationSize; i++) {
 				if (elitizam) {
@@ -98,6 +98,7 @@ public class TheGod {
 				
 				Individual D1 = krizanje.cross(i, population[currentPop], population[newPop]);
 				mutator.mutate(D1);
+				//killer.kill(D1);
 				rectifier.rectifie(D1);
 			}
 
@@ -105,30 +106,23 @@ public class TheGod {
 			newPop = (newPop + 1) % 2;
 		}
 		
-		writer.close();
 		Population p = population[newPop];
 		evaluatePopulation(p);
-		double minFitness = p.getMinPopulationFitness();
-		
-		for (int i = 0; i < populationSize; i++) {
-			if (Math.abs(minFitness - p.getIndividual(i).getFitness()) < 1e-6) {
-				System.out.println(p.individualToString(i));
-				break;
-			}
-		}
+		writer.write(p.getBestIndividual().toString());
+		writer.flush();
 	}
 
 	private void evaluatePopulation(Population childrenOfGod) {
-		double fitnessSum = 0;
-		double maxVal = 0;
-		double minVal = Double.MAX_VALUE;
-		double avgVal;
+		float fitnessSum = 0;
+		float maxVal = 0;
+		float minVal = Float.MAX_VALUE;
+		float avgVal;
 		int size = childrenOfGod.size();
 		for (int i = 0; i < size; i++) {
 			Individual one = childrenOfGod.getIndividual(i);
-			double onesFitness = (double) evaluator.evaluateFitness(one);
+			float onesFitness = evaluator.evaluateFitness(one);
 
-			one.setFitness((float) onesFitness);
+			one.setFitness(onesFitness);
 
 			fitnessSum += onesFitness;
 
@@ -147,5 +141,9 @@ public class TheGod {
 		avgVal = fitnessSum/size;
 		childrenOfGod.setPopulationFitness(fitnessSum, maxVal, minVal, avgVal);
 
+	}
+	
+	public void terminate() {
+		this.terminate = true;
 	}
 }
