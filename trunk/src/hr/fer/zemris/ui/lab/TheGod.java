@@ -23,7 +23,7 @@ public class TheGod {
 	private Krizanje krizanje;
 	private Rectifier rectifier;
 	private Evaluator evaluator;
-	private int populationSize = 100;
+	private int populationSize = 1000;
 	final private float mutationFactor = 0.001f;
 	private boolean elitizam = true;
 
@@ -116,7 +116,4 @@ public class TheGod {
 		childrenOfGod.setPopulationFitness(fitnessSum, maxVal, minVal, avgVal);
 
 	}
-
-	
-
 }
